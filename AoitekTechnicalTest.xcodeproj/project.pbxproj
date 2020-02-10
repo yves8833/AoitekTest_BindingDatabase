@@ -14,6 +14,10 @@
 		E43052D923F0EA1B006ED09E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E43052D723F0EA1B006ED09E /* Main.storyboard */; };
 		E43052DB23F0EA1F006ED09E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E43052DA23F0EA1F006ED09E /* Assets.xcassets */; };
 		E43052DE23F0EA1F006ED09E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E43052DC23F0EA1F006ED09E /* LaunchScreen.storyboard */; };
+		E43052E623F0FB0B006ED09E /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43052E523F0FB0B006ED09E /* ViewModel.swift */; };
+		E45D144523F10275007ECAF5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45D144423F10275007ECAF5 /* Model.swift */; };
+		E45D144923F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45D144823F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift */; };
+		E45D144B23F13959007ECAF5 /* RedditHotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45D144A23F13959007ECAF5 /* RedditHotTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		E43052DA23F0EA1F006ED09E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E43052DD23F0EA1F006ED09E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E43052DF23F0EA1F006ED09E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E43052E523F0FB0B006ED09E /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		E45D144423F10275007ECAF5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		E45D144823F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditHotImageBackgroundTableViewCell.swift; sourceTree = "<group>"; };
+		E45D144A23F13959007ECAF5 /* RedditHotTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditHotTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,7 +56,6 @@
 				B0E4A9A1F1AC987DBC441A72 /* Pods-AoitekTechnicalTest.debug.xcconfig */,
 				2C5E003CEE5BBEA64AF55E74 /* Pods-AoitekTechnicalTest.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -83,13 +90,25 @@
 			children = (
 				E43052D123F0EA1B006ED09E /* AppDelegate.swift */,
 				E43052D323F0EA1B006ED09E /* SceneDelegate.swift */,
+				E4CA2B5D23F15C1800986B95 /* cell */,
 				E43052D523F0EA1B006ED09E /* ViewController.swift */,
+				E43052E523F0FB0B006ED09E /* ViewModel.swift */,
+				E45D144423F10275007ECAF5 /* Model.swift */,
 				E43052D723F0EA1B006ED09E /* Main.storyboard */,
 				E43052DA23F0EA1F006ED09E /* Assets.xcassets */,
 				E43052DC23F0EA1F006ED09E /* LaunchScreen.storyboard */,
 				E43052DF23F0EA1F006ED09E /* Info.plist */,
 			);
 			path = AoitekTechnicalTest;
+			sourceTree = "<group>";
+		};
+		E4CA2B5D23F15C1800986B95 /* cell */ = {
+			isa = PBXGroup;
+			children = (
+				E45D144823F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift */,
+				E45D144A23F13959007ECAF5 /* RedditHotTableViewCell.swift */,
+			);
+			path = cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,8 +226,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E45D144523F10275007ECAF5 /* Model.swift in Sources */,
+				E45D144B23F13959007ECAF5 /* RedditHotTableViewCell.swift in Sources */,
+				E45D144923F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift in Sources */,
 				E43052D623F0EA1B006ED09E /* ViewController.swift in Sources */,
 				E43052D223F0EA1B006ED09E /* AppDelegate.swift in Sources */,
+				E43052E623F0FB0B006ED09E /* ViewModel.swift in Sources */,
 				E43052D423F0EA1B006ED09E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
