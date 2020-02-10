@@ -30,9 +30,9 @@ class HotModel: Decodable {
     }
 }
 
-class SimpleHotModel: Decodable {
+class SimpleHotModel
     var title: String
-    var imageInfo: [HotImageModel]?
+    var imageInfo: ImageModel?
     
     enum CodingKeys: String, CodingKey {
         case data
@@ -53,16 +53,21 @@ class SimpleHotModel: Decodable {
         title = try data.decode(String.self, forKey:.title)
         
         let preview = try? data.nestedContainer(keyedBy: SubImageCodingKeys.self, forKey: .preview)
-        imageInfo = try preview?.decode([HotImageModel].self, forKey: .images)
+        let imageInfos = try preview?.decode([ImageModel].self, forKey: .images)
+        imageInfo = imageInfos?.first
     }
 }
 
 class ImageModel: Decodable {
-    var url: String?
+    var url: String
     var width: Int
     var height: Int
     
     enum CodingKeys: String, CodingKey {
+        case source
+    }
+    
+    enum SubCodingKeys: String, CodingKey {
         case url
         case width
         case height
@@ -70,13 +75,10 @@ class ImageModel: Decodable {
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        url = try container.decode(String.self, forKey:.url)
-        width = try container.decode(Int.self, forKey:.width)
-        height = try container.decode(Int.self, forKey:.height)
+        
+        let source = try container.nestedContainer(keyedBy: SubCodingKeys.self, forKey: .source)
+        url = try source.decode(String.self, forKey:.url)
+        width = try source.decode(Int.self, forKey:.width)
+        height = try source.decode(Int.self, forKey:.height)
     }
-}
-
-struct HotImageModel: Decodable {
-    var source: ImageModel
-    var resolutions: [ImageModel]
 }

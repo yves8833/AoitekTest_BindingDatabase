@@ -89,21 +89,21 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let imageInfo = viewModel.info?[indexPath.row].imageInfo?.first else { return 0 }
-        if imageInfo.source.height == imageInfo.source.width {
+        guard let imageInfo = viewModel.info?[indexPath.row].imageInfo else { return 0 }
+        if imageInfo.height == imageInfo.width {
             return UIScreen.main.bounds.size.width / 3
         } else {
-            return UIScreen.main.bounds.size.width / CGFloat(imageInfo.source.width) * CGFloat(imageInfo.source.height)
+            return UIScreen.main.bounds.size.width / CGFloat(imageInfo.width) * CGFloat(imageInfo.height)
         }
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let currentInfo = viewModel.info?[indexPath.row] else { return UITableViewCell() }
-        if currentInfo.imageInfo?.first?.source.height != currentInfo.imageInfo?.first?.source.width {
+        if currentInfo.imageInfo?.height != currentInfo.imageInfo?.width {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotImageBackgroundTableViewCellReuseIdentifier, for: indexPath) as! RedditHotImageBackgroundTableViewCell
             cell.titleLabel.text = currentInfo.title
-            if let imageUrl = currentInfo.imageInfo?.first?.source.url {
+            if let imageUrl = currentInfo.imageInfo?.url {
                 cell.backgroundImageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "loading"))
             }
             return cell
@@ -111,7 +111,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotTableViewCellReuseIdentifier, for: indexPath) as! RedditHotTableViewCell
             cell.titleTextView.text = currentInfo.title
             
-            if let imageUrl = currentInfo.imageInfo?.first?.source.url {
+            if let imageUrl = currentInfo.imageInfo?.url {
                 cell.rightImageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "loading"))
             }
             return cell
