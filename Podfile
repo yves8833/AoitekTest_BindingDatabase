@@ -6,5 +6,6 @@ target 'AoitekTechnicalTest' do
   use_frameworks!
   
   pod 'Alamofire', '4.9.1'
+  pod 'SDWebImage', '5.4.0'
 
 end
