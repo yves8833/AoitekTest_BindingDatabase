@@ -85,11 +85,11 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.info?.count ?? 0
+        return viewModel.hotModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let imageInfo = viewModel.info?[indexPath.row].imageInfo else { return 0 }
+        guard let imageInfo = viewModel.hotModels?[indexPath.row].imageInfo else { return 0 }
         if imageInfo.height == imageInfo.width {
             return UIScreen.main.bounds.size.width / 3
         } else {
@@ -99,19 +99,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let currentInfo = viewModel.info?[indexPath.row] else { return UITableViewCell() }
-        if currentInfo.imageInfo?.height != currentInfo.imageInfo?.width {
+        guard let hotModel = viewModel.hotModels?[indexPath.row] else { return UITableViewCell() }
+        if hotModel.imageInfo?.height != hotModel.imageInfo?.width {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotImageBackgroundTableViewCellReuseIdentifier, for: indexPath) as! RedditHotImageBackgroundTableViewCell
-            cell.titleLabel.text = currentInfo.title
-            if let imageUrl = currentInfo.imageInfo?.url {
+            cell.titleLabel.text = hotModel.title
+            if let imageUrl = hotModel.imageInfo?.url {
                 cell.backgroundImageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "loading"))
             }
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotTableViewCellReuseIdentifier, for: indexPath) as! RedditHotTableViewCell
-            cell.titleTextView.text = currentInfo.title
+            cell.titleTextView.text = hotModel.title
             
-            if let imageUrl = currentInfo.imageInfo?.url {
+            if let imageUrl = hotModel.imageInfo?.url {
                 cell.rightImageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "loading"))
             }
             return cell
@@ -119,7 +119,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let info = viewModel.info, indexPath.row == info.count - 1, viewModel.status != .loadMoreLoading {
+        if let hotModels = viewModel.hotModels, indexPath.row == hotModels.count - 1, viewModel.status != .loadMoreLoading {
             viewModel.loadMoreRedditTaiwanHotIfNeeded()
         }
     }
@@ -146,8 +146,8 @@ extension ViewController: ViewModelDelegate {
             errorLabel.text = "網路異常，請稍後再試。"
             break
         case .loadMoreSuccess:
-            guard let lastInfoCount = self.viewModel.lastInfoCount, let currentInfoCount = viewModel.info?.count else { break }
-            let indexPaths = Array(lastInfoCount...currentInfoCount - 1).map { IndexPath(item: $0, section: 0) }
+            guard let lastModelsCount = self.viewModel.lastModelsCount, let currentModelsCount = viewModel.hotModels?.count else { break }
+            let indexPaths = Array(lastModelsCount...currentModelsCount - 1).map { IndexPath(item: $0, section: 0) }
             tableView.insertRows(at: indexPaths, with: .automatic)
             break
         case .loadMoreFailure:

@@ -9,7 +9,7 @@
 import UIKit
 
 class HotModel: Decodable {
-    var info: [SimpleHotModel]
+    var info: [SimpleHotJSONModel]
     var pageId: String?
     
     enum CodingKeys: String, CodingKey {
@@ -26,13 +26,18 @@ class HotModel: Decodable {
         
         let data = try container.nestedContainer(keyedBy: SubCodingKeys.self, forKey: .data)
         pageId = try? data.decode(String.self, forKey: .after)
-        info = try data.decode([SimpleHotModel].self, forKey:.children)
+        info = try data.decode([SimpleHotJSONModel].self, forKey:.children)
     }
 }
 
-class SimpleHotModel
+struct SimpleHotModel {
     var title: String
     var imageInfo: ImageModel?
+}
+
+class SimpleHotJSONModel: Decodable {
+    var title: String
+    var imageInfo: ImageJSONModel?
     
     enum CodingKeys: String, CodingKey {
         case data
@@ -53,12 +58,18 @@ class SimpleHotModel
         title = try data.decode(String.self, forKey:.title)
         
         let preview = try? data.nestedContainer(keyedBy: SubImageCodingKeys.self, forKey: .preview)
-        let imageInfos = try preview?.decode([ImageModel].self, forKey: .images)
+        let imageInfos = try preview?.decode([ImageJSONModel].self, forKey: .images)
         imageInfo = imageInfos?.first
     }
 }
 
-class ImageModel: Decodable {
+struct ImageModel {
+    var url: String
+    var width: Int
+    var height: Int
+}
+
+class ImageJSONModel: Decodable {
     var url: String
     var width: Int
     var height: Int

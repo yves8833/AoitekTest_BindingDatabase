@@ -35,18 +35,47 @@ class ViewModel: NSObject {
     }
     
     private let TaiwanHotUrl = "https://www.reddit.com/r/Taiwan/hot.json"
-    var info: [SimpleHotModel]?
-    private var pageID: String?
-    var lastInfoCount: Int?
+    var hotModels: [SimpleHotModel]? {
+        get {
+            return DataPersistant.hotModels()
+        }
+        set{
+            if let hotModels = newValue {
+                DataPersistant.saveHotModels(With: hotModels)
+            }
+        }
+    }
+    private var pageId: String?{
+        get{
+            return DataPersistant.pageId()
+        }
+        set{
+            if let pageId = newValue {
+                DataPersistant.savePageId(With: pageId)
+            }
+        }
+        
+    }
+    var lastModelsCount: Int?
     
     func fetchRedditTaiwanHot() {
         self.status = .loading
+        if let _ = hotModels {
+            self.status = .success
+            return
+        }
         let parameters = ["limit": 25, "raw_json": 1]
         let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
         Alamofire.request(TaiwanHotUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers).responseJSON { (response) in
             if let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) {
-                self.info = hotModel.info
-                self.pageID = hotModel.pageId
+                self.hotModels = hotModel.info.map({ (simpleHotJSONModel) -> SimpleHotModel in
+                    if let imageInfo = simpleHotJSONModel.imageInfo {
+                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: ImageModel(url: imageInfo.url, width: imageInfo.width, height: imageInfo.height))
+                    } else {
+                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: nil)
+                    }
+                })
+                self.pageId = hotModel.pageId
                 self.status = .success
             } else {
                 /// error handle
@@ -58,16 +87,24 @@ class ViewModel: NSObject {
     
     func loadMoreRedditTaiwanHotIfNeeded() {
         self.status = .loadMoreLoading
-        lastInfoCount = info?.count
-        guard let pageID = pageID else {
+        guard let pageId = pageId else {
+            self.status = .loadMoreFailure
             return
         }
-        let parameters = ["limit": 25, "raw_json": 1, "after": pageID] as [String : Any]
+        lastModelsCount = hotModels?.count
+        let parameters = ["limit": 25, "raw_json": 1, "after": pageId] as [String : Any]
         let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
         Alamofire.request(TaiwanHotUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers).responseJSON { (response) in
             if let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) {
-                self.info?.append(contentsOf: hotModel.info)
-                self.pageID = hotModel.pageId
+                let loadMoreInfo = hotModel.info.map({ (simpleHotJSONModel) -> SimpleHotModel in
+                                   if let imageInfo = simpleHotJSONModel.imageInfo {
+                                       return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: ImageModel(url: imageInfo.url, width: imageInfo.width, height: imageInfo.height))
+                                   } else {
+                                       return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: nil)
+                                   }
+                               })
+                self.hotModels?.append(contentsOf:loadMoreInfo)
+                self.pageId = hotModel.pageId
                 self.status = .loadMoreSuccess
             } else {
                 /// error handle
