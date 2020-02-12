@@ -97,12 +97,12 @@ class ViewModel: NSObject {
         Alamofire.request(TaiwanHotUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers).responseJSON { (response) in
             if let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) {
                 let loadMoreInfo = hotModel.info.map({ (simpleHotJSONModel) -> SimpleHotModel in
-                                   if let imageInfo = simpleHotJSONModel.imageInfo {
-                                       return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: ImageModel(url: imageInfo.url, width: imageInfo.width, height: imageInfo.height))
-                                   } else {
-                                       return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: nil)
-                                   }
-                               })
+                    if let imageInfo = simpleHotJSONModel.imageInfo {
+                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: ImageModel(url: imageInfo.url, width: imageInfo.width, height: imageInfo.height))
+                    } else {
+                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: nil)
+                    }
+                })
                 self.hotModels?.append(contentsOf:loadMoreInfo)
                 self.pageId = hotModel.pageId
                 self.status = .loadMoreSuccess
