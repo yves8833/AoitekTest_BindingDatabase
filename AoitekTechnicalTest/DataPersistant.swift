@@ -18,12 +18,14 @@ class DataPersistant {
     }
     
     static func saveHotModels(With info: [SimpleHotModel]) {
-        let dictInfo = info.map { (simpleHotModel) -> Dictionary<String, Any> in
+        let dictInfo = info.map { (simpleHotModel) -> Dictionary<String, Any>? in
             if let imageInfo = simpleHotModel.imageInfo {
                 return ["title": simpleHotModel.title, "url": imageInfo.url, "height": imageInfo.height, "width": imageInfo.width]
             } else {
-                return ["title": simpleHotModel.title]
+                return nil
             }
+        }.filter { (dictionary) -> Bool in
+            return dictionary != nil
         }
         self.userDefaults().set(dictInfo, forKey: HotModelsKey)
         self.userDefaults().synchronize()

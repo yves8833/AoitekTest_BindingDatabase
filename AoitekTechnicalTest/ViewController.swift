@@ -99,21 +99,21 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let hotModel = viewModel.hotModels?[indexPath.row] else { return UITableViewCell() }
-        if hotModel.imageInfo?.height != hotModel.imageInfo?.width {
+        guard let hotModel = viewModel.hotModels?[indexPath.row], let imageInfo = hotModel.imageInfo else { return UITableViewCell() }
+        if hotModel.title.contains("made some") {
+            print(indexPath.row)
+        }
+        if imageInfo.height != imageInfo.width {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotImageBackgroundTableViewCellReuseIdentifier, for: indexPath) as! RedditHotImageBackgroundTableViewCell
             cell.titleLabel.text = hotModel.title
-            if let imageUrl = hotModel.imageInfo?.url {
-                cell.backgroundImageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "loading"))
-            }
+            cell.backgroundImageView.sd_setImage(with: URL(string: imageInfo.url), placeholderImage: UIImage(named: "loading"))
+            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotTableViewCellReuseIdentifier, for: indexPath) as! RedditHotTableViewCell
             cell.titleTextView.text = hotModel.title
-            
-            if let imageUrl = hotModel.imageInfo?.url {
-                cell.rightImageView.sd_setImage(with: URL(string: imageUrl), placeholderImage: UIImage(named: "loading"))
-            }
+            cell.rightImageView.sd_setImage(with: URL(string: imageInfo.url), placeholderImage: UIImage(named: "loading"))
+
             return cell
         }
     }
