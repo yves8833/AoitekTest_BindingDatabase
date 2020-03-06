@@ -7,5 +7,5 @@ target 'AoitekTechnicalTest' do
   
   pod 'Alamofire', '4.9.1'
   pod 'SDWebImage', '5.4.0'
-
+  pod 'RealmSwift'
 end
