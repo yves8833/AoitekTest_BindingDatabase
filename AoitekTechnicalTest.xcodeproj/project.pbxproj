@@ -18,7 +18,8 @@
 		E45D144523F10275007ECAF5 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45D144423F10275007ECAF5 /* Model.swift */; };
 		E45D144923F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45D144823F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift */; };
 		E45D144B23F13959007ECAF5 /* RedditHotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E45D144A23F13959007ECAF5 /* RedditHotTableViewCell.swift */; };
-		E49F4B0923F17EB6004657BF /* DataPersistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = E49F4B0823F17EB6004657BF /* DataPersistant.swift */; };
+		E4B0C35D24123E4D000002EF /* RMModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B0C35C24123E4D000002EF /* RMModel.swift */; };
+		E4B0C35F24123E5F000002EF /* ModelDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4B0C35E24123E5F000002EF /* ModelDAO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +38,8 @@
 		E45D144423F10275007ECAF5 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		E45D144823F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditHotImageBackgroundTableViewCell.swift; sourceTree = "<group>"; };
 		E45D144A23F13959007ECAF5 /* RedditHotTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedditHotTableViewCell.swift; sourceTree = "<group>"; };
-		E49F4B0823F17EB6004657BF /* DataPersistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataPersistant.swift; sourceTree = "<group>"; };
+		E4B0C35C24123E4D000002EF /* RMModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMModel.swift; sourceTree = "<group>"; };
+		E4B0C35E24123E5F000002EF /* ModelDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDAO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +97,7 @@
 				E4CA2B5D23F15C1800986B95 /* cell */,
 				E43052D523F0EA1B006ED09E /* ViewController.swift */,
 				E43052E523F0FB0B006ED09E /* ViewModel.swift */,
-				E45D144423F10275007ECAF5 /* Model.swift */,
-				E49F4B0823F17EB6004657BF /* DataPersistant.swift */,
+				E4F54B7B24123B7600B85111 /* Model */,
 				E43052D723F0EA1B006ED09E /* Main.storyboard */,
 				E43052DA23F0EA1F006ED09E /* Assets.xcassets */,
 				E43052DC23F0EA1F006ED09E /* LaunchScreen.storyboard */,
@@ -112,6 +113,16 @@
 				E45D144A23F13959007ECAF5 /* RedditHotTableViewCell.swift */,
 			);
 			path = cell;
+			sourceTree = "<group>";
+		};
+		E4F54B7B24123B7600B85111 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E45D144423F10275007ECAF5 /* Model.swift */,
+				E4B0C35E24123E5F000002EF /* ModelDAO.swift */,
+				E4B0C35C24123E4D000002EF /* RMModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,11 +242,12 @@
 			files = (
 				E45D144523F10275007ECAF5 /* Model.swift in Sources */,
 				E45D144B23F13959007ECAF5 /* RedditHotTableViewCell.swift in Sources */,
+				E4B0C35D24123E4D000002EF /* RMModel.swift in Sources */,
 				E45D144923F13908007ECAF5 /* RedditHotImageBackgroundTableViewCell.swift in Sources */,
 				E43052D623F0EA1B006ED09E /* ViewController.swift in Sources */,
+				E4B0C35F24123E5F000002EF /* ModelDAO.swift in Sources */,
 				E43052D223F0EA1B006ED09E /* AppDelegate.swift in Sources */,
 				E43052E623F0FB0B006ED09E /* ViewModel.swift in Sources */,
-				E49F4B0923F17EB6004657BF /* DataPersistant.swift in Sources */,
 				E43052D423F0EA1B006ED09E /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

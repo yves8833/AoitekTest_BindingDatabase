@@ -41,15 +41,15 @@ class RedditHotImageBackgroundTableViewCell: UITableViewCell {
         backgroundImageView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
-            backgroundImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 5),
-            backgroundImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant:  -5),
-            backgroundImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -5),
+            backgroundImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
+            backgroundImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
+            backgroundImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant:  -10),
+            backgroundImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
             
             titleLabel.heightAnchor.constraint(equalToConstant: 30),
-            titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 5),
-            titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: self.backgroundImageView.bottomAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: self.backgroundImageView.leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: self.backgroundImageView.trailingAnchor, constant: -10),
         ])
     }
 

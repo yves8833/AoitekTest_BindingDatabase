@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .clear
-        tableView.separatorStyle = .singleLine
+        tableView.separatorStyle = .none
         
         tableView.register(RedditHotImageBackgroundTableViewCell.self, forCellReuseIdentifier: RedditHotImageBackgroundTableViewCellReuseIdentifier)
         tableView.register(RedditHotTableViewCell.self, forCellReuseIdentifier: RedditHotTableViewCellReuseIdentifier)
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        viewModel.fetchRedditTaiwanHot()
+        viewModel.bindingData()
         initialView()
     }
     
@@ -89,31 +89,26 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        guard let imageInfo = viewModel.hotModels?[indexPath.row].imageInfo else { return 0 }
-        if imageInfo.height == imageInfo.width {
-            return UIScreen.main.bounds.size.width / 3
+        if indexPath.row % 4 == 0 {
+            return 200
         } else {
-            return UIScreen.main.bounds.size.width / CGFloat(imageInfo.width) * CGFloat(imageInfo.height)
+            return UIScreen.main.bounds.size.width / 3
         }
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let hotModel = viewModel.hotModels?[indexPath.row], let imageInfo = hotModel.imageInfo else { return UITableViewCell() }
-        if hotModel.title.contains("made some") {
-            print(indexPath.row)
-        }
-        if imageInfo.height != imageInfo.width {
+        guard let hotModel = viewModel.hotModels?[indexPath.row] else { return UITableViewCell() }
+        if indexPath.row % 4 == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotImageBackgroundTableViewCellReuseIdentifier, for: indexPath) as! RedditHotImageBackgroundTableViewCell
             cell.titleLabel.text = hotModel.title
-            cell.backgroundImageView.sd_setImage(with: URL(string: imageInfo.url), placeholderImage: UIImage(named: "loading"))
+            cell.backgroundImageView.sd_setImage(with: URL(string: hotModel.imageUrl), placeholderImage: UIImage(named: "slowmo"))
             
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: RedditHotTableViewCellReuseIdentifier, for: indexPath) as! RedditHotTableViewCell
             cell.titleTextView.text = hotModel.title
-            cell.rightImageView.sd_setImage(with: URL(string: imageInfo.url), placeholderImage: UIImage(named: "loading"))
-
+            cell.rightImageView.sd_setImage(with: URL(string: hotModel.imageUrl), placeholderImage: UIImage(named: "slowmo"))
+            
             return cell
         }
     }
@@ -128,34 +123,29 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 extension ViewController: ViewModelDelegate {
     func updateWithStatus(_ status: HotModelStatus) {
         switch status {
-        case .loading:
+        case .fetchServerLoading:
             loadingIndicatorView.startAnimating()
             tableView.isHidden = true
             errorLabel.isHidden = true
             break
-        case .success:
-            tableView.reloadData()
-            loadingIndicatorView.stopAnimating()
-            tableView.isHidden = false
-            errorLabel.isHidden = true
-            break
-        case .failure:
+        case .fetchServerFailure:
             loadingIndicatorView.stopAnimating()
             tableView.isHidden = true
             errorLabel.isHidden = false
             errorLabel.text = "網路異常，請稍後再試。"
             break
-        case .loadMoreSuccess:
-            guard let lastModelsCount = self.viewModel.lastModelsCount, let currentModelsCount = viewModel.hotModels?.count else { break }
-            let indexPaths = Array(lastModelsCount...currentModelsCount - 1).map { IndexPath(item: $0, section: 0) }
-            tableView.insertRows(at: indexPaths, with: .automatic)
-            break
         case .loadMoreFailure:
             let alert = UIAlertController.init(title: "Alert", message: "加載失敗", preferredStyle: .alert)
             let action = UIAlertAction.init(title: "OK", style: .cancel, handler: nil)
             alert.addAction(action)
-            
             self.present(alert, animated: true, completion: nil)
+            break
+        case .dataChanged:
+            tableView.reloadData()
+            loadingIndicatorView.stopAnimating()
+            tableView.isHidden = false
+            errorLabel.isHidden = true
+            break
         default:
             break
         }

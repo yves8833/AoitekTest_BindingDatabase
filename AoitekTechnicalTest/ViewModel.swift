@@ -8,15 +8,16 @@
 
 import UIKit
 import Alamofire
+import RealmSwift
 
 enum HotModelStatus {
     case none
-    case loading
-    case success
-    case failure
+    case dataChanged
+    case fetchServerLoading
+    case fetchServerFailure
     case loadMoreLoading
-    case loadMoreSuccess
     case loadMoreFailure
+    case finish
 }
 
 protocol ViewModelDelegate: AnyObject {
@@ -35,53 +36,47 @@ class ViewModel: NSObject {
     }
     
     private let TaiwanHotUrl = "https://www.reddit.com/r/Taiwan/hot.json"
-    var hotModels: [SimpleHotModel]? {
-        get {
-            return DataPersistant.hotModels()
-        }
-        set{
-            if let hotModels = newValue {
-                DataPersistant.saveHotModels(With: hotModels)
-            }
-        }
+    private let modelDAO = ModelDAO()
+    var hotModels: Results<RMModel>? {
+        return modelDAO.data()
     }
-    private var pageId: String?{
-        get{
-            return DataPersistant.pageId()
-        }
-        set{
-            if let pageId = newValue {
-                DataPersistant.savePageId(With: pageId)
-            }
-        }
-        
-    }
-    var lastModelsCount: Int?
     
-    func fetchRedditTaiwanHot() {
-        self.status = .loading
-        if let _ = hotModels {
-            self.status = .success
-            return
-        }
+    private var pageId: String?
+    private var notificationToken: NotificationToken? = nil
+    func observeHotModels() {
+        notificationToken = hotModels?.observe({ [weak self] (changes: RealmCollectionChange) in
+            switch changes {
+            case .error(_):
+                self?.status = .fetchServerFailure
+            default:
+                self?.status = .dataChanged
+            }
+        })
+    }
+    
+    deinit {
+        notificationToken?.invalidate()
+    }
+    
+    func bindingData() {
+        observeHotModels()
+        fetchFromServer()
+    }
+    
+    private func fetchFromServer() {
+        self.status = .fetchServerLoading
         let parameters = ["limit": 25, "raw_json": 1]
         let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
         Alamofire.request(TaiwanHotUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers).responseJSON { (response) in
-            if let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) {
-                self.hotModels = hotModel.info.map({ (simpleHotJSONModel) -> SimpleHotModel in
-                    if let imageInfo = simpleHotJSONModel.imageInfo {
-                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: ImageModel(url: imageInfo.url, width: imageInfo.width, height: imageInfo.height))
-                    } else {
-                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: nil)
-                    }
-                })
-                self.pageId = hotModel.pageId
-                self.status = .success
-            } else {
-                /// error handle
-                self.status = .failure
+            guard let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) else {
+                self.status = .fetchServerFailure
+                return
             }
             
+            self.pageId = hotModel.pageId
+            self.modelDAO.deleteAll()
+            self.modelDAO.insert(With: hotModel.info)
+            self.status = .finish
         }
     }
     
@@ -91,26 +86,17 @@ class ViewModel: NSObject {
             self.status = .loadMoreFailure
             return
         }
-        lastModelsCount = hotModels?.count
         let parameters = ["limit": 25, "raw_json": 1, "after": pageId] as [String : Any]
         let headers: HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
         Alamofire.request(TaiwanHotUrl, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: headers).responseJSON { (response) in
-            if let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) {
-                let loadMoreInfo = hotModel.info.map({ (simpleHotJSONModel) -> SimpleHotModel in
-                    if let imageInfo = simpleHotJSONModel.imageInfo {
-                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: ImageModel(url: imageInfo.url, width: imageInfo.width, height: imageInfo.height))
-                    } else {
-                        return SimpleHotModel(title: simpleHotJSONModel.title, imageInfo: nil)
-                    }
-                })
-                self.hotModels?.append(contentsOf:loadMoreInfo)
-                self.pageId = hotModel.pageId
-                self.status = .loadMoreSuccess
-            } else {
-                /// error handle
+            guard let result = response.data, let hotModel = try? JSONDecoder().decode(HotModel.self, from: result) else {
                 self.status = .loadMoreFailure
+                return
             }
             
+            self.pageId = hotModel.pageId
+            self.modelDAO.insert(With: hotModel.info)
+            self.status = .finish
         }
     }
 }

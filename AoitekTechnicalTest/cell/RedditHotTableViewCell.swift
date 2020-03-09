@@ -46,11 +46,9 @@ class RedditHotTableViewCell: UITableViewCell {
             titleTextView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10),
             titleTextView.trailingAnchor.constraint(equalTo: rightImageView.leadingAnchor, constant: -10),
             
-            rightImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
-            rightImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -5),
-            rightImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            
-            titleTextView.widthAnchor.constraint(equalTo: rightImageView.widthAnchor, multiplier: 2),
+            rightImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
+            rightImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10),
+            rightImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
             rightImageView.heightAnchor.constraint(equalTo: rightImageView.widthAnchor)
         ])
     }
